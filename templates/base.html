@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+            <!-- <meta charset="utf-8" content="width=device-width,initial-scale=1"/> -->
+        <link rel="stylesheet" type="text/css" href="/static/css/base.css"/>
+        <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        {% block header %}{% endblock %}
+    </head>
+    <body>
+        
+        {% block content %}{% endblock %}
+    </body>
+    {% block script %}{% endblock %}
+</html>

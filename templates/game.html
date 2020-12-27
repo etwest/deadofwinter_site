@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}DofW Helper{% endblock %}
+
+{% block header%}
+<h1>Dead of Winter Assistant for Remote Play</h1>
+<h3> Play Game </h3>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/javascript/gameManage.js"></script>
+{% endblock %}
+
+{% block content %}
+<h4> Locations </h4>
+<span id="pcount">20</span> Police Station Cards<br>
+<span id="gcount">20</span> Grocery Store Cards<br>
+<span id="scount">20</span> School Cards<br>
+<span id="lcount">20</span> Library Cards<br>
+<span id="hcount">20</span> Hospital Cards<br>
+<span id="gascount">20</span> Gas Station Cards<br>
+
+<h4> Search </h4>
+<form id="search-form">
+    Location to Search: <select name="location" id="location" required>
+        <option value="1">Police Station</option>
+        <option value="2">Grocery Store</option>
+        <option value="3">School</option>
+        <option value="4">Library</option>
+        <option value="5">Hospital</option>
+        <option value="6">Gas Station</option>
+    </select><br>
+    Number of cards to look at: <input id="lookNum" type="number" min=1 max=6 required><br>
+    <input id='submit-search' type='submit' value='search'>
+</form>
+<h4 id="card-display" hidden>Cards You Found</h4>
+<form id="take-form" hidden>
+    Select the cards you want to keep (select none to take none)<br>
+    <div id=card1 hidden><input id="card1-check" type="checkbox"></div>
+    <div id=card2 hidden><input id="card2-check" type="checkbox"></div>
+    <div id=card3 hidden><input id="card3-check" type="checkbox"></div>
+    <div id=card4 hidden><input id="card4-check" type="checkbox"></div>
+    <div id=card5 hidden><input id="card5-check" type="checkbox"></div>
+    <div id=card6 hidden><input id="card6-check" type="checkbox"></div>
+    <input id='submit-take' type='submit' value='take'>
+</form>
+<h4> Log of Actions </h4>
+<div id="log" class="log-box">
+    The log of all transactions (searching/taking cards) will appear here
+</div>
+{% endblock %}

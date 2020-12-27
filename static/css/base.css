@@ -1,0 +1,15 @@
+.hide{
+  -webkit-transform:scale(0) !important;
+  transform:scale(0) !important;
+}
+
+.shown{
+  -webkit-transform:scale(1) !important;
+  transform:scale(1) !important;
+  display:inline !important;
+}
+
+.log-box{
+    overflow: scroll;
+    height: 150px;
+}

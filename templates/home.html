@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}DofW Helper{% endblock %}
+
+{% block header%}
+<h1>Dead of Winter Assistant for Remote Play</h1>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/javascript/homeSend.js"></script>
+{% endblock %}
+
+{% block content %}
+<h3>Start a new game</h3>
+<form id="new-game-form">
+    <input id="player-list" type="text" required>Comma seperated list of players<br>
+    <input id="no_betray" name="variant" type="radio" value="none">No Betrayer<br>
+    <input id="standard" name="variant" type="radio" value="standard" checked>Standard<br>
+    <input id="big_betray" name="variant" type="radio" value="betrayer">Betrayer More Likely<br>
+    <input id="submit" class="submit" type="submit" value="Create New Game">
+    <span id="success" hidden> Successfully created new game! Game Code: </span>
+    <span id="error" hidden> Failed to create game! :(</span>
+</form>
+<h3>Join an existing game</h3>
+<form id="join-game">
+    <input id="game-code" type="text" required>Enter Game Code<br>
+    <input id="submit" class="submit" type="submit" value="Join Game">
+</form>
+{% endblock %}

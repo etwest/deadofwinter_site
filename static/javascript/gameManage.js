@@ -1,0 +1,140 @@
+var timer;
+$(document).ready(function() {
+    timer = setInterval('refreshLog()', 15000);
+});
+
+function refreshLog() {
+    game_code = window.location.pathname.split('/')[1];
+    $.ajax({
+        url:'/'+game_code+'/log',
+        type:"GET",
+        success: function(result) {
+            if (result != "" && result != $('#log').html()) {
+                $("#log").html(result);
+            }
+        },
+        error: function(error) {
+            console.log("Stopping auto refresh because of error");
+            clearInterval(timer);
+        }
+
+    })
+    $.ajax({
+        url:'/'+game_code+'/card_nums',
+        type:"GET",
+        success: function(result) {
+            $("#pcount").text(result.cardNums[0])
+            $("#gcount").text(result.cardNums[1])
+            $("#scount").text(result.cardNums[2])
+            $("#lcount").text(result.cardNums[3])
+            $("#hcount").text(result.cardNums[4])
+            $("#gascount").text(result.cardNums[5])
+        },
+        error: function(error) {
+            console.log("Stopping auto refresh because of error");
+            clearInterval(timer);
+        }
+
+    })
+}
+
+// submit search request to server
+$( "#search-form" ).submit(async function( event ) {
+    // stop the normal function of submit
+    event.preventDefault();
+    game_code = window.location.pathname.split('/')[1];
+    player_name = window.location.pathname.split('/')[2];
+    deckType = $("#location").val();
+    cardNum = $("#lookNum").val()
+    $.ajax({
+        url:'/' + game_code + '/' + player_name + '/card_decks',
+        type:"GET",
+        data: {deckType: deckType, cardNum: cardNum},
+        success: function(result) {
+            console.log(result)
+            for(var i = 1; i <= 6; i++) {
+                id = "#card" + (i).toString();
+                $(id).attr("hidden", true);
+            }
+            for(var i = 0; i < result.cards.length; i++) {
+                id = "#card" + (i+1).toString();
+                $(id).removeAttr("hidden");
+                $(id).html($(id).html().split('>')[0] + "> " + result.cards[i]);
+                $(id+"-check").val(result.cards[i]);
+            }
+            $("#card-display").removeAttr("hidden");
+            $("#take-form").removeAttr("hidden");
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    })
+});
+
+// submit take cards request to server
+$( "#take-form" ).submit(async function( event ) {
+    // stop the normal function of submit
+    event.preventDefault();
+    game_code = window.location.pathname.split('/')[1];
+    player_name = window.location.pathname.split('/')[2];
+    deckType = $("#location").val();
+    cardList = "";
+    fullList = "";
+    
+    if($("#card1-check").val() != "on") {
+        if($("#card1-check").is(":checked")) 
+            cardList += ", " + $("#card1-check").val()
+        fullList += ", " + $("#card1-check").val()
+    }
+    if($("#card2-check").val() != "on") {
+        if($("#card2-check").is(":checked")) 
+            cardList += ", " + $("#card2-check").val()
+        fullList += ", " + $("#card2-check").val()
+    }
+    if($("#card3-check").val() != "on") {
+        if($("#card3-check").is(":checked")) 
+            cardList += ", " + $("#card3-check").val()
+        fullList += ", " + $("#card3-check").val()
+    }
+    if($("#card4-check").val() != "on") {
+        if($("#card4-check").is(":checked")) 
+            cardList += ", " + $("#card4-check").val()
+        fullList += ", " + $("#card4-check").val()
+    }
+    if($("#card5-check").val() != "on") {
+        if($("#card5-check").is(":checked")) 
+            cardList += ", " + $("#card5-check").val()
+        fullList += ", " + $("#card5-check").val()
+    }
+    if($("#card6-check").val() != "on") {
+        if($("#card6-check").is(":checked")) 
+            cardList += ", " + $("#card6-check").val()
+        fullList += ", " + $("#card6-check").val()
+    }
+    cardList = cardList.substr(2);
+    fullList = fullList.substr(2);
+
+    console.log(deckType)
+    console.log(cardList)
+    console.log(fullList)
+    $.ajax({
+        url:'/' + game_code + '/' + player_name + '/card_decks',
+        type:"DELETE",
+        data: {deckType: deckType, cardList: cardList, fullList: fullList},
+        success: function(result) {
+            console.log(result)
+            $("#card-display").attr("hidden", true);
+            $("#take-form").attr("hidden", true);
+            // set the check vals back to 'on'
+            $("#card1-check").val("on");
+            $("#card2-check").val("on");
+            $("#card3-check").val("on");
+            $("#card4-check").val("on");
+            $("#card5-check").val("on");
+            $("#card6-check").val("on");
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    })
+});

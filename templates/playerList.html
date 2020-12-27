@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}DofW Helper{% endblock %}
+
+{% block header%}
+<h1>Dead of Winter Assistant for Remote Play</h1>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/javascript/playerJoin.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="enter-player">
+    <h3>Who are you?</h3>
+    <form id="players-form">
+        {% for player in player_list %}
+        <input id="{{player}}" name="name" type="radio" value="{{player}}" checked>{{player}}<br>
+        {% endfor %}
+        <input id="submit" class="submit" type="submit" value="Join Game">
+        <span id="error" hidden>Error! Incorrect player name or game deleted?</span>
+    </form>
+</div>
+<div id="objective_display" hidden>
+    <h3>Secret Objective and Starting Hand</h3>
+    <span id="objective">ERROR try again :(</span><br>
+    <button id="begin-game" onclick="location.href='/filled_by_javascript';">Begin Game</button>
+</div>
+{% endblock %}
