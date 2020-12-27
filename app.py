@@ -299,9 +299,9 @@ def card_decks(gamecode_, player_name):
             return response
         
         if cardNum == 1:
-            game.log_transaction(player_name + " looked at top card at the " + game.get_deck(deckType).name)
+            game.log_transaction(player_name + " looked at the top card at the " + game.get_deck(deckType).name)
         else:
-            game.log_transaction(player_name + " looked at top " + str(cardNum) + " cards at the " + game.get_deck(deckType).name)
+            game.log_transaction(player_name + " looked at the top " + str(cardNum) + " cards at the " + game.get_deck(deckType).name)
         cards = game.get_deck(deckType).showTop(cardNum)
         # display the top cardNum cards 
         return make_response(jsonify(cards=cards), 200)
@@ -316,14 +316,17 @@ def card_decks(gamecode_, player_name):
             response = make_response("Failed to get cardList or fullList!", 400)
             return response
 
-        cardList = [x.strip() for x in cardList.split(",")]
-        fullList = [x.strip() for x in fullList.split(",")]
-        if len(cardList) == 1:
-            game.log_transaction(player_name + " took " + str(len(cardList)) + " card from the " + game.get_deck(deckType).name)
-        elif len(cardList) > 1:
-            game.log_transaction(player_name + " took " + str(len(cardList)) + " cards from the " + game.get_deck(deckType).name)
-        
-        cards = game.get_deck(deckType).removeCards(cardList, fullList)
+        if len(cardList) == 0:
+            game.log_transaction(player_name + " left the card(s) on the top of the " + game.get_deck(deckType).name + " deck")  
+        else:
+            cardList = [x.strip() for x in cardList.split(",")]
+            fullList = [x.strip() for x in fullList.split(",")]
+            if len(cardList) == 1:
+                game.log_transaction(player_name + " took " + str(len(cardList)) + " card from the " + game.get_deck(deckType).name)
+            elif len(cardList) > 1:
+                game.log_transaction(player_name + " took " + str(len(cardList)) + " cards from the " + game.get_deck(deckType).name)
+            
+            cards = game.get_deck(deckType).removeCards(cardList, fullList)
         return make_response("OK", 200)
 
 ###################################

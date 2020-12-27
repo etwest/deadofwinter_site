@@ -1,6 +1,6 @@
 var timer;
 $(document).ready(function() {
-    timer = setInterval('refreshLog()', 15000);
+    timer = setInterval('refreshLog()', 10000);
 });
 
 function refreshLog() {
@@ -111,8 +111,10 @@ $( "#take-form" ).submit(async function( event ) {
             cardList += ", " + $("#card6-check").val()
         fullList += ", " + $("#card6-check").val()
     }
-    cardList = cardList.substr(2);
-    fullList = fullList.substr(2);
+    if (cardList.length > 2)
+        cardList = cardList.substr(2);
+    if (fullList.length > 2)
+        fullList = fullList.substr(2);
 
     console.log(deckType)
     console.log(cardList)
