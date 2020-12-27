@@ -299,9 +299,9 @@ def card_decks(gamecode_, player_name):
             return response
         
         if cardNum == 1:
-            game.log_transaction(player_name + " found " + str(cardNum) + " card at the " + game.get_deck(deckType).name)
+            game.log_transaction(player_name + " looked at top card at the " + game.get_deck(deckType).name)
         else:
-            game.log_transaction(player_name + " found " + str(cardNum) + " cards at the " + game.get_deck(deckType).name)
+            game.log_transaction(player_name + " looked at top " + str(cardNum) + " cards at the " + game.get_deck(deckType).name)
         cards = game.get_deck(deckType).showTop(cardNum)
         # display the top cardNum cards 
         return make_response(jsonify(cards=cards), 200)
