@@ -1,6 +1,6 @@
 var timer;
 $(document).ready(function() {
-    timer = setInterval('refreshLog()', 10000);
+    timer = setInterval('refreshLog()', 5000); // refresh the log and card counts every 5 seconds
 });
 
 function refreshLog() {
