@@ -354,6 +354,23 @@ def card_decks(gamecode_, player_name):
 		return make_response("OK", 200)
 
 ###################################
+# Function to delete games
+###################################
+@app.route("/<gamecode_>/delete", methods=['DELETE'])
+def delete_game(gamecode_):
+	try:
+		assert(gamecode_ != None)
+		assert(redis_db.exists(gamecode_))
+	except:
+		print('game code missing or incorrect')
+		response = make_response("Game code missing or incorrect", 400)
+		return response
+
+	redis_db.delete(gamecode_)
+	response = make_response("Successfully deleted game", 200)
+	return response
+
+###################################
 # Functions for getting general game info
 ###################################
 @app.route("/<gamecode_>/log", methods=['GET'])
