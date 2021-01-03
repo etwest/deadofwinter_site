@@ -11,6 +11,7 @@ function refreshLog() {
         success: function(result) {
             if (result != "" && result != $('#log').html()) {
                 $("#log").html(result);
+                $("#log").scrollTop($("#log").scrollHeight)
             }
         },
         error: function(error) {
@@ -37,6 +38,40 @@ function refreshLog() {
 
     })
 }
+
+$( "#undo-previous" ).submit(async function( event ) {
+    event.preventDefault();
+    game_code = window.location.pathname.split('/')[1];
+    player_name = window.location.pathname.split('/')[2];
+    $.ajax({
+        url: '/' + game_code + '/' + player_name + '/undo_action',
+        type: 'PUT',
+        success: function(result) {
+            console.log(result);
+            if (result == "Revert did nothing") {
+                console.log("did nothing");
+                $("#success-nomore-undo").removeAttr("hidden");
+                $("#error-undo").attr("hidden", true)
+                $("#success-undo").attr("hidden", true)
+                setTimeout(() => { $("#success-nomore-undo").attr("hidden", true)}, 3000);
+            }
+            else {
+                console.log("successfully reverted");
+                $("#success-undo").removeAttr("hidden");
+                $("#error-undo").attr("hidden", true)
+                $("#success-nomore-undo").attr("hidden", true)
+                setTimeout(() => { $("#success-undo").attr("hidden", true)}, 3000);
+            }
+        },
+        error: function(error) {
+            console.log(error);
+            $("#error-undo").removeAttr("hidden");
+            $("#success-undo").attr("hidden", true)
+            $("#success-nomore-undo").attr("hidden", true)
+            setTimeout(() => { $("#error-undo").attr("hidden", true)}, 3000);
+        }
+    })
+})
 
 // submit search request to server
 $( "#search-form" ).submit(async function( event ) {
@@ -134,6 +169,63 @@ $( "#take-form" ).submit(async function( event ) {
             $("#card4-check").val("on");
             $("#card5-check").val("on");
             $("#card6-check").val("on");
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    })
+});
+
+$( "#crisis-form" ).submit(async function( event ) {
+    event.preventDefault();
+    game_code = window.location.pathname.split('/')[1];
+    player_name = window.location.pathname.split('/')[2];
+    card = $("#crisis-card").val();
+    loc = $("#crisis-card-loc").val();
+
+    $.ajax({
+        url:'/' + game_code + '/' + player_name + '/crisis_deck',
+        type:"PUT",
+        data:{card: card, loc: loc},
+        success: function(result) {
+            console.log(result);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    })
+});
+$( "#reveal-crisis-form" ).submit(async function( event ) {
+    event.preventDefault();
+    game_code = window.location.pathname.split('/')[1];
+    player_name = window.location.pathname.split('/')[2];
+
+    $.ajax({
+        url:'/' + game_code + '/' + player_name + '/crisis_deck',
+        type:"GET",
+        success: function(result) {
+            console.log(result);
+            $("#crisis-reveal").html(result);
+            $("#crisis-cards-div").removeAttr("hidden");
+        },
+        error: function(error) {
+            console.log(error);
+            $("#crisis-cards-div").attr("hidden", true);
+        }
+    })
+});
+$( "#clear-crisis-form" ).submit(async function( event ) {
+    event.preventDefault();
+    game_code = window.location.pathname.split('/')[1];
+    player_name = window.location.pathname.split('/')[2];
+
+    $.ajax({
+        url:'/' + game_code + '/' + player_name + '/crisis_deck',
+        type:"DELETE",
+        success: function(result) {
+            console.log(result);
+            $("#crisis-reveal").html(result);
+            $("#crisis-cards-div").attr("hidden", true);
         },
         error: function(error) {
             console.log(error);

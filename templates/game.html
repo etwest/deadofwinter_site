@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<h4> Locations </h4>
+<h4> Locations and Undo </h4>
 <span id="pcount">20</span> Police Station Cards<br>
 <span id="gcount">20</span> Grocery Store Cards<br>
 <span id="scount">20</span> School Cards<br>
@@ -32,6 +32,13 @@
     Number of cards to look at: <input id="lookNum" type="number" min=1 max=6 required><br>
     <input id='submit-search' type='submit' value='search'>
 </form>
+<form id="undo-previous">
+    <input id='undo-previous' type='submit' value='Undo Previous'>
+    <span id=success-undo hidden> Success! </span>
+    <span id=error-undo hidden> Undo Failed :(</span>
+    <span id=success-nomore-undo hidden> Cannot undo more than once</span>
+</form>
+Note this undo will only reverse one take/add and can only go back one action. It also works globally (can be used to undo other's actions) so be careful.
 <h4 id="card-display" hidden>Cards You Found</h4>
 <form id="take-form" hidden>
     Select the cards you want to keep ('take' zero to leave them where they are)<br>
@@ -43,6 +50,41 @@
     <div id=card6 hidden><input id="card6-check" type="checkbox"></div>
     <input id='submit-take' type='submit' value='take'>
 </form>
+<h4> Crisis Deck</h4>
+Add a card to the crisis
+<form id="crisis-form">
+    <datalist id="card-suggest">
+        {% for card in cards %}
+        <option>{{card}}</option>
+        {% endfor %}
+    </datalist>
+    <datalist id='location-suggest'>
+        <option>Starting Card</option>
+        <option>Police Station</option>
+        <option>Grocery Store</option>
+        <option>School</option>
+        <option>Library</option>
+        <option>Hospital</option>
+        <option>Gas Station</option>
+    </datalist>
+    card: <input id='crisis-card' autoComplete="on" list="card-suggest" /><br>
+    location: <input id='crisis-card-loc' autocomplete="on" list="location-suggest"><br>
+    <input id='submit-crisis' type='submit' value='Put Card in Crisis'>
+</form>
+Reveal the cards in the crisis deck
+<form id="reveal-crisis-form">
+    <input id='submit-crisis-reveal' type='submit' value='Reveal Cards'>
+</form>
+<div id='crisis-cards-div' hidden>
+    Cards in the crisis deck:<br>
+    <div id="crisis-reveal">
+
+    </div>
+    <form id="clear-crisis-form">
+        <input id='submit-clear-crisis' value="Clear Crisis Deck" type='submit'>
+    </form>
+</div>
+
 <h4> Log of Actions </h4>
 <div id="log" class="log-box">
     The log of all transactions (searching/taking cards) will appear here

@@ -26,21 +26,23 @@ LIB_DECK = 4
 HOS_DECK = 5
 GAS_DECK = 6
 
-def save_state(game_num, game_obj):
+def save_state(game_num, game_obj, save_prev):
+	if redis_db.exists(game_num) and save_prev:
+		prev_game = redis_db.get(game_num)
+		redis_db.set(game_num+"_prev", prev_game)
 	redis_db.set(game_num, pickle.dumps(game_obj))
 
 # must be called after asserting that the game does indeed exist
 def load_state(game_num):
 	try:
 		game = pickle.loads(redis_db.get(game_num))
-		print(game)
 		return game
 	except Exception as err:
 		print(err)
 		return Game()
 
 ###################################
-# Game class
+###          Game class         ###
 ###################################
 class Game():
 	def __init__(self, players_, sdeck_, pdeck_, gdeck_, scdeck_, ldeck_, hdeck_, gasdeck_):
@@ -53,6 +55,7 @@ class Game():
 		self.hospital_cards     = hdeck_
 		self.gas_station_cards  = gasdeck_
 		self.log                = ""
+		self.crisis_deck        = []
 
 	def get_deck(self, deckType):
 		if deckType == START_DECK:
@@ -77,9 +80,31 @@ class Game():
 	def cardNums(self):
 		return [self.police_cards.size, self.grocery_cards.size, self.school_cards.size, self.library_cards.size, self.hospital_cards.size, self.gas_station_cards.size]
 
+	def __eq__(self, other):
+		if self.player_map != other.player_map:
+			return False
+		if self.start_cards != other.start_cards:
+			return False
+		if self.police_cards != other.police_cards:
+			return False
+		if self.grocery_cards != other.grocery_cards:
+			return False
+		if self.school_cards != other.school_cards:
+			return False
+		if self.library_cards != other.library_cards:
+			return False
+		if self.hospital_cards != other.hospital_cards:
+			return False
+		if self.gas_station_cards != other.gas_station_cards:
+			return False
+		if self.crisis_deck != other.crisis_deck:
+			return False
+		return True
+	def __ne__(self, other):
+		return not self == other
 
 ###################################
-# Card class and Decks
+###    Card class and Decks     ###
 ###################################
 class Deck():
 	def __init__(self, deckType):
@@ -152,6 +177,14 @@ class Deck():
 
 		self.size = len(self.deck)
 		return
+	
+	def __eq__(self, other):
+		if self.deck == other.deck:
+			return True
+		else:
+			return False
+	def __ne__(self, other):
+		return not self == other
 
 # global variables
 secret_obj = []
@@ -163,8 +196,16 @@ for line in secret_file.readlines():
 for line in betray_file.readlines():
 	betray_obj.append(line)
 
+All_cards = set() # every card in the game
+for i in range(7):
+	cards = Deck(i)
+	for card in cards.deck:
+		All_cards.add(card)
+
+All_cards = sorted(list(All_cards))
+
 ###################################
-# home page and initialization
+## home page and initialization  ##
 ###################################
 @app.route("/", methods=['GET'])
 def home():
@@ -216,7 +257,7 @@ def init():
 		if not redis_db.exists(game_code):
 			break
 	new_game = Game(player_obj_map, start_cards, police_cards, grocery_cards, school_cards, library_cards, hospital_cards, gas_station_cards)
-	save_state(game_code, new_game)
+	save_state(game_code, new_game, False)
 	print("Done creating new game Game Code:", game_code)
 	return make_response(jsonify(status="OK", gameCode=game_code), 200)
 
@@ -273,12 +314,12 @@ def init_player(gamecode_):
 		starting_hand = game.start_cards.showTop(7)
 		game.start_cards.removeCards(starting_hand, starting_hand)
 
-	save_state(gamecode_, game)
+	save_state(gamecode_, game, False)
 
 	return make_response(jsonify(status="OK", objective=game.player_map[player_name][0], cards=starting_hand), 200)
 
 ###################################
-# Managing Game in Progress
+###  Managing Game in Progress  ###
 ###################################
 @app.route("/<gamecode_>/<player_name>/game", methods=['GET'])
 def game(gamecode_, player_name):
@@ -290,7 +331,51 @@ def game(gamecode_, player_name):
 		response = make_response("Game code missing or incorrect", 400)
 		return response
 
-	return render_template('game.html')
+	return render_template('game.html', cards=All_cards)
+
+@app.route("/<gamecode_>/<player_name>/crisis_deck", methods=['GET', 'PUT', 'DELETE'])
+def crisis_deck(gamecode_, player_name):
+	try:
+		assert(gamecode_ != None)
+		assert(redis_db.exists(gamecode_)) # joining current active game
+	except:
+		print('game code missing or incorrect')
+		response = make_response("Game code missing or incorrect", 400)
+		return response
+
+	game = load_state(gamecode_)
+	if flask_request.method == 'GET':
+		if len(game.crisis_deck) > 0:
+			game.log_transaction(player_name + " revealed the crisis deck")
+			save_state(gamecode_, game, False)
+			response = make_response("<br>".join(game.crisis_deck), 200)
+			return response
+		else:
+			response = make_response("Crisis deck is empty", 400)
+			return response
+	elif flask_request.method == 'PUT': # adding a card to the crisis
+		try:
+			card = flask_request.values.get('card')
+			loc = flask_request.values.get('loc')
+			assert(card != None)
+			assert(loc != None)
+		except:
+			print("Failed to get card or location for adding crisis_card")
+			response = make_response("Failed to get card or location for adding crisis_card!", 400)
+			return response
+
+		toAdd = card + " from the " + loc
+		game.crisis_deck.append(toAdd)
+		game.log_transaction(player_name + " added a card to the crisis deck")
+		save_state(gamecode_, game, True)
+		response = make_response("Successfully added a card to the crisis", 200)
+		return response
+	else: # clearing the crisis deck
+		game.crisis_deck = []
+		game.log_transaction(player_name + " removed all cards from the crisis deck")
+		save_state(gamecode_, game, True)
+		response = make_response("Successfully cleared the crisis deck")
+		return response
 
 @app.route("/<gamecode_>/<player_name>/card_decks", methods=['GET', 'DELETE'])
 def card_decks(gamecode_, player_name):
@@ -325,10 +410,10 @@ def card_decks(gamecode_, player_name):
 		else:
 			game.log_transaction(player_name + " looked at the top " + str(cardNum) + " cards at the " + game.get_deck(deckType).name)
 		cards = game.get_deck(deckType).showTop(cardNum)
-		save_state(gamecode_, game)
+		save_state(gamecode_, game, False)
 		# display the top cardNum cards 
 		return make_response(jsonify(cards=cards), 200)
-	else: # PUT request, tells us how what cards have been taken by a player's hand
+	else: # DELETE request, tells us how what cards have been taken by a player's hand
 		try:
 			cardList = flask_request.values.get('cardList')
 			fullList = flask_request.values.get('fullList')
@@ -350,11 +435,11 @@ def card_decks(gamecode_, player_name):
 				game.log_transaction(player_name + " took " + str(len(cardList)) + " cards from the " + game.get_deck(deckType).name)
 			
 			cards = game.get_deck(deckType).removeCards(cardList, fullList)
-			save_state(gamecode_, game)
+			save_state(gamecode_, game, True)
 		return make_response("OK", 200)
 
 ###################################
-# Function to delete games
+###  Function to delete games   ###
 ###################################
 @app.route("/<gamecode_>/delete", methods=['DELETE'])
 def delete_game(gamecode_):
@@ -370,8 +455,29 @@ def delete_game(gamecode_):
 	response = make_response("Successfully deleted game", 200)
 	return response
 
+@app.route("/<gamecode_>/<player_name>/undo_action", methods=['PUT'])
+def undo_action(gamecode_, player_name):
+	try:
+		assert(redis_db.exists(gamecode_)) # joining current active game
+	except:
+		print('game code missing or incorrect')
+		response = make_response("Game code missing or incorrect", 400)
+		return response
+
+	prev_game = load_state(gamecode_+"_prev")
+	game = load_state(gamecode_)
+	if prev_game != game:
+		prev_game.log = game.log
+		prev_game.log_transaction(player_name + " undid previous take/add action")
+		save_state(gamecode_, prev_game, False) # overwrite the current game state
+		response = make_response("Sucessfully reverted game state", 200)
+		return response
+	else:
+		response = make_response("Revert did nothing", 200)
+		return response
+
 ###################################
-# Functions for getting general game info
+# Functions for general game info #
 ###################################
 @app.route("/<gamecode_>/log", methods=['GET'])
 def getlog(gamecode_):
