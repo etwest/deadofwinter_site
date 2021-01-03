@@ -30,6 +30,7 @@ function refreshLog() {
             $("#lcount").text(result.cardNums[3])
             $("#hcount").text(result.cardNums[4])
             $("#gascount").text(result.cardNums[5])
+            $("#crisis-count").text(result.cardNums[6])
         },
         error: function(error) {
             console.log("Stopping auto refresh because of error");
@@ -189,9 +190,15 @@ $( "#crisis-form" ).submit(async function( event ) {
         data:{card: card, loc: loc},
         success: function(result) {
             console.log(result);
+            $("#crisis-card").val('');
+            $("#crisis-card-loc").val('');
+            $("#submit-crisis-success").removeAttr("hidden");
+            $("#submit-crisis-error").attr("hidden", true);
         },
         error: function(error) {
             console.log(error);
+            $("#submit-crisis-success").attr("hidden", true);
+            $("#submit-crisis-error").removeAttr("hidden");
         }
     })
 });

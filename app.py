@@ -78,7 +78,7 @@ class Game():
 		print(info)
 
 	def cardNums(self):
-		return [self.police_cards.size, self.grocery_cards.size, self.school_cards.size, self.library_cards.size, self.hospital_cards.size, self.gas_station_cards.size]
+		return [self.police_cards.size, self.grocery_cards.size, self.school_cards.size, self.library_cards.size, self.hospital_cards.size, self.gas_station_cards.size, len(self.crisis_deck)]
 
 	def __eq__(self, other):
 		if self.player_map != other.player_map:
@@ -122,7 +122,7 @@ class Deck():
 			self.name = "Grocery Store"
 		elif deckType == SCHOOL_DECK:
 			self.size = 20
-			self.cards = {"Junk":1, "Scissors":1, "Megaphone":1, "Baseball Bat":1, "Food 1":3, "Food 2":3, "Guide to Leadership":1, "Beginner's Guide to Marshall Art":1, "1,2,3 Barricades":1, "School Blueprints":1, "Medicine":3, "Outsider 1":1, "Outsider 2":2}
+			self.cards = {"Junk":1, "Scissors":1, "Megaphone":1, "Baseball Bat":1, "Food 1":3, "Food 2":3, "Guide to Leadership":1, "Beginner's Guide to Marshall Arts":1, "1,2,3 Barricades":1, "School Blueprints":1, "Medicine":3, "Outsider 1":2, "Outsider 3":1}
 			self.name = "School"
 		elif deckType == LIB_DECK:
 			self.size = 20
@@ -130,7 +130,7 @@ class Deck():
 			self.name = "Library"
 		elif deckType == HOS_DECK:
 			self.size = 20
-			self.cards = {"Junk":1, "Mop":1, "Flashlight":1, "Snow Shoes":1, "Wrench":1, "Fuel":4, "Food 2":2, "Medicine":4, "Adrenaline Shot": 2, "Outsider 2":3}
+			self.cards = {"Junk":1, "Mop":1, "Flashlight":1, "Fuel":4, "Food 2":4, "Medicine":4, "Adrenaline Shot": 2, "Outsider 2":3}
 			self.name = "Hospital"
 		elif deckType == GAS_DECK:
 			self.size = 20

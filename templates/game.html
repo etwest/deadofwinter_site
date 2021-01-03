@@ -29,16 +29,16 @@
         <option value="5">Hospital</option>
         <option value="6">Gas Station</option>
     </select><br>
-    Number of cards to look at: <input id="lookNum" type="number" min=1 max=6 required><br>
+    Number of cards to look at: <input id="lookNum" type="number" min=1 max=20 required><br>
     <input id='submit-search' type='submit' value='search'>
 </form>
+Undo will only reverse one take/add and can only go back one action. It also works globally (can be used to undo other's actions) so be careful.
 <form id="undo-previous">
     <input id='undo-previous' type='submit' value='Undo Previous'>
     <span id=success-undo hidden> Success! </span>
     <span id=error-undo hidden> Undo Failed :(</span>
     <span id=success-nomore-undo hidden> Cannot undo more than once</span>
 </form>
-Note this undo will only reverse one take/add and can only go back one action. It also works globally (can be used to undo other's actions) so be careful.
 <h4 id="card-display" hidden>Cards You Found</h4>
 <form id="take-form" hidden>
     Select the cards you want to keep ('take' zero to leave them where they are)<br>
@@ -58,7 +58,8 @@ Add a card to the crisis
         <option>{{card}}</option>
         {% endfor %}
     </datalist>
-    <datalist id='location-suggest'>
+    card: <input id='crisis-card' autoComplete="on" list="card-suggest" required><br>
+    location: <select id='crisis-card-loc' name='crisis-card-loc' required>
         <option>Starting Card</option>
         <option>Police Station</option>
         <option>Grocery Store</option>
@@ -66,14 +67,14 @@ Add a card to the crisis
         <option>Library</option>
         <option>Hospital</option>
         <option>Gas Station</option>
-    </datalist>
-    card: <input id='crisis-card' autoComplete="on" list="card-suggest" /><br>
-    location: <input id='crisis-card-loc' autocomplete="on" list="location-suggest"><br>
+    </select><br>
     <input id='submit-crisis' type='submit' value='Put Card in Crisis'>
+    <span id='submit-crisis-success' hidden>Successfully added card</span>
+    <span id='submit-crisis-error' hidden>Error attempting to add card. Try again.</span>
 </form>
-Reveal the cards in the crisis deck
+Number of cards in crisis deck is <span id='crisis-count'>0</span>.
 <form id="reveal-crisis-form">
-    <input id='submit-crisis-reveal' type='submit' value='Reveal Cards'>
+    <input id='submit-crisis-reveal' type='submit' value='Reveal Crisis Deck'>
 </form>
 <div id='crisis-cards-div' hidden>
     Cards in the crisis deck:<br>
