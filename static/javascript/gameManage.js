@@ -96,7 +96,7 @@ $( "#search-form" ).submit(async function( event ) {
                 id = "#card" + (i+1).toString();
                 $(id).removeAttr("hidden");
                 $(id).html($(id).html().split('>')[0] + "> " + result.cards[i]);
-                $(id+"-check").val(result.cards[i]);
+                $(id+"-check").val(result.cards[i].split('> ')[1]);
             }
             $("#card-display").removeAttr("hidden");
             $("#take-form").removeAttr("hidden");

@@ -17,6 +17,9 @@ except Exception as err:
 
 app = Flask(__name__)
 
+###################################
+###       Global Variables      ###
+###################################
 # deck codes
 START_DECK = 0
 POLICE_DECK = 1
@@ -26,6 +29,36 @@ LIB_DECK = 4
 HOS_DECK = 5
 GAS_DECK = 6
 
+# objectives
+secret_obj = []
+betray_obj = []
+secret_file = open("obj_nonbetray.txt", "r")
+betray_file = open("obj_betray.txt", "r")
+for line in secret_file.readlines():
+	secret_obj.append(line)
+for line in betray_file.readlines():
+	betray_obj.append(line)
+
+# get a list of every card in the game, its type, and its description
+card_map = {}
+game_type_map = {}
+card_file = open("cards.txt")
+for line in card_file.readlines():
+	line = line.strip()
+	if line != "":
+		data = [x.strip() for x in line.split("\t") if x != ""]
+		if data[0] != "Name":
+			card_map[data[0]] = (data[1], data[3])
+			if data[2] not in game_type_map:
+				game_type_map[data[2]] = [data[0]]
+			else:
+				game_type_map[data[2]].append(data[0])
+
+All_cards = sorted(list(card_map.keys()))
+
+###################################
+###       Interact with DB      ###
+###################################
 def save_state(game_num, game_obj, save_prev):
 	if redis_db.exists(game_num) and save_prev:
 		prev_game = redis_db.get(game_num)
@@ -186,23 +219,15 @@ class Deck():
 	def __ne__(self, other):
 		return not self == other
 
-# global variables
-secret_obj = []
-betray_obj = []
-secret_file = open("obj_nonbetray.txt", "r")
-betray_file = open("obj_betray.txt", "r")
-for line in secret_file.readlines():
-	secret_obj.append(line)
-for line in betray_file.readlines():
-	betray_obj.append(line)
+def cardNameWithSymbol(card):
+	return "<img src=/static/images/DoW-" + card_map[card][0].lower() + "-icon.png class='icon'> " + card
 
-All_cards = set() # every card in the game
-for i in range(7):
-	cards = Deck(i)
-	for card in cards.deck:
-		All_cards.add(card)
-
-All_cards = sorted(list(All_cards))
+def deckWithSymbols(deck):
+	ret = []
+	for card in deck:
+		print(card in card_map)
+		ret.append(cardNameWithSymbol(card))
+	return ret
 
 ###################################
 ## home page and initialization  ##
@@ -331,7 +356,7 @@ def game(gamecode_, player_name):
 		response = make_response("Game code missing or incorrect", 400)
 		return response
 
-	return render_template('game.html', cards=All_cards)
+	return render_template('game.html', cards=All_cards, player_name=player_name)
 
 @app.route("/<gamecode_>/<player_name>/crisis_deck", methods=['GET', 'PUT', 'DELETE'])
 def crisis_deck(gamecode_, player_name):
@@ -364,7 +389,7 @@ def crisis_deck(gamecode_, player_name):
 			response = make_response("Failed to get card or location for adding crisis_card!", 400)
 			return response
 
-		toAdd = card + " from the " + loc
+		toAdd = cardNameWithSymbol(card) + " from the " + loc
 		game.crisis_deck.append(toAdd)
 		game.log_transaction(player_name + " added a card to the crisis deck")
 		save_state(gamecode_, game, True)
@@ -409,7 +434,7 @@ def card_decks(gamecode_, player_name):
 			game.log_transaction(player_name + " looked at the top card at the " + game.get_deck(deckType).name)
 		else:
 			game.log_transaction(player_name + " looked at the top " + str(cardNum) + " cards at the " + game.get_deck(deckType).name)
-		cards = game.get_deck(deckType).showTop(cardNum)
+		cards = deckWithSymbols(game.get_deck(deckType).showTop(cardNum))
 		save_state(gamecode_, game, False)
 		# display the top cardNum cards 
 		return make_response(jsonify(cards=cards), 200)

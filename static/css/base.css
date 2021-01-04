@@ -14,6 +14,12 @@
     height: 150px;
 }
 
+.icon{
+  height:18px;
+  width:18px;
+  display:inline-block;
+}
+
 * {
     font-size:20px;
 }
@@ -22,4 +28,9 @@ h1 {
 }
 h3 {
     font-size:24px;
+}
+
+h4 {
+  margin-top:1em;
+  margin-bottom:.2em;
 }

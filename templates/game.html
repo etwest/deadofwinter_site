@@ -2,16 +2,15 @@
 {% block title %}DofW Helper{% endblock %}
 
 {% block header%}
-<h1>Dead of Winter Assistant for Remote Play</h1>
-<h3> Play Game </h3>
+<h1>Dead of Winter Helper for Remote Play</h1>
+<h3> Playing Game as {{player_name}}</h3>
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript" src="/static/javascript/gameManage.js"></script>
 {% endblock %}
-
 {% block content %}
-<h4> Locations and Undo </h4>
+<h4>Locations</h4>
 <span id="pcount">20</span> Police Station Cards<br>
 <span id="gcount">20</span> Grocery Store Cards<br>
 <span id="scount">20</span> School Cards<br>
@@ -32,13 +31,6 @@
     Number of cards to look at: <input id="lookNum" type="number" min=1 max=20 required><br>
     <input id='submit-search' type='submit' value='search'>
 </form>
-Undo will only reverse one take/add and can only go back one action. It also works globally (can be used to undo other's actions) so be careful.
-<form id="undo-previous">
-    <input id='undo-previous' type='submit' value='Undo Previous'>
-    <span id=success-undo hidden> Success! </span>
-    <span id=error-undo hidden> Undo Failed :(</span>
-    <span id=success-nomore-undo hidden> Cannot undo more than once</span>
-</form>
 <h4 id="card-display" hidden>Cards You Found</h4>
 <form id="take-form" hidden>
     Select the cards you want to keep ('take' zero to leave them where they are)<br>
@@ -49,6 +41,14 @@ Undo will only reverse one take/add and can only go back one action. It also wor
     <div id=card5 hidden><input id="card5-check" type="checkbox"></div>
     <div id=card6 hidden><input id="card6-check" type="checkbox"></div>
     <input id='submit-take' type='submit' value='take'>
+</form>
+<h4> Undo </h4>
+Undo will only reverse one take/add and can only go back one action. It also works globally (can be used to undo other's actions) so be careful.
+<form id="undo-previous">
+    <input id='undo-previous' type='submit' value='Undo Previous'>
+    <span id=success-undo hidden> Success! </span>
+    <span id=error-undo hidden> Undo Failed :(</span>
+    <span id=success-nomore-undo hidden> Cannot undo more than once</span>
 </form>
 <h4> Crisis Deck</h4>
 Add a card to the crisis
