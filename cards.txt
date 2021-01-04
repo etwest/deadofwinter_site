@@ -1,0 +1,46 @@
+Name				Type		Game		Description
+Pistol				Weapon		Base		Equip: Once per round, when this Survivor performs an attack, do not roll for exposure.
+Sniper Rifle			Weapon		Base		Equip: Once per round, you may kill 1 zombie at any location. Do not roll for exposure. This is not an attack.
+Shotgun				Weapon		Base		Equip: Once per round, when this Survivor performs an attack, kill 2 zombies instead of 1. Do not roll for exposure. Place a noise token at tis location, if able.
+Lighter				Weapon		Base		Equip: Once per round, when this Survivor performs an attack, you may pay a fuel card to kill 4 zombies instead of 1. Do not roll for exposure. Do not use the ability on the fuel card.
+Switchblade			Weapon		Base		Equip: Once per round, you may spend an action die to attack with this Survivior (any die).
+
+A Journey in Jazzercise		Book		Base		Equip: Once per round, you may reroll an unused action die you control.
+Survivor's Cookbook		Book		Base		Equip: Once per round, if this Survivor is at the Colony, you may add 1 food token to the food supply.
+Guide to Leadership		Book		Base		Equip: Once per round, you may increase an unused action die you control by 1.
+Beginnner's Marshall Arts	Book		Base		Equip: Once per round, do not roll for exposure when performing an attack with this Survivor.
+1,2,3 Barricades		Book		Base		Equip: Once per round, during your turn, you may build a barricade without spending an action die if this Survivor is at the colony.
+Police Station Blueprints	Book		Base		Equip: Once per round, when performing at search at the Police Station, look at and keep one addition card.
+Grocery Store Blueprints	Book		Base		Equip: Once per round, when performing at search at the Grocery Store, look at and keep one addition card.
+Library Blueprints		Book		Base		Equip: Once per round, when performing at search at the Library, look at and keep one addition card.
+Hospital Blueprints		Book		Base		Equip: Once per round, when performing at search at the Hospital, look at and keep one addition card.
+Gas Station Blueprints		Book		Base		Equip: Once per round, when performing at search at the Gas Station, look at and keep one addition card.
+School Blueprints		Book		Base		Equip: Once per round, when performing at search at the School, look at and keep one addition card.
+
+Junk				Tool		Base		Waste Pile: You may reroll an unused action die you control.
+Pad Lock			Tool		Base		Waste Pile: You may build 2 barricades at a location that a Survivor you control is at. This does not use an action die.
+Night Vision Goggles		Tool		Base		Equip: At the beginning of each round, roll 1 aditional action die.
+Walkie Talkie			Tool		Base		Equip: You may reduce the unused action die of another player by 1 to increase the value of an unused action die you control (you must decrease to increase).
+Rotten Flesh			Tool		Base		Equip: When spreading a bite effect ignore this Survivor.
+Hammer				Tool		Base		Equip: Once per round, when performing a barricade action, you may build 2 instead of 1.
+Snow Shoes			Tool		Base		Equip: If you were to receive a frost bite wound, receive a wound instead.
+Wrench				Tool		Base		Equip: Once per round, you may spend any unused action die to perform an attack with this Survivor
+Scissors			Tool		Base		Waste Pile: Kill 1 zombie, do not roll for exposure.
+Megaphone			Tool		Base		Waste Pile: Move 4 zombies from 1 location to a location that a Survivor you control is at.
+Baseball Bat			Tool		Base		Equip: Once per round, when performing an attack with this Survivor, you may kill 2 zombies instead of 1.
+Mop				Tool		Base		Equip: Once per round, when performing a clean waste action, you may remove 5 cards instead of 3.
+Flashlight			Tool		Base		Equip: Once per round, when making noise, you may look at 3 cards instead of just 1.
+Reading Lamp			Tool		Base		Waste Pile: Perform an attack with a Survivor you control without using an action die.
+
+Medicine			Medicine	Base		Waste Pile: You may heal one wound on a Survivor you control or another player's Survivor that shares a location with a Survivor you control.
+Adrenaline Shot			Medicine	Base		Waste Pile: Change an unused action die to the result of your choice.
+
+Fuel				Fuel		Base		Waste Pile: When moving a Survivor you control, do not roll for exposure.
+
+Food 1				Food		Base		Waste Pile: Add 1 food tokens to the food supply
+Food 2				Food		Base		Waste Pile: Add 2 food tokens to the food supply
+Food 3				Food		Base		Waste Pile: Add 3 food tokens to the food supply
+
+Outsider 1			Survivor	Base		Event: Draw the top card of the Survivor deck and add that Survivor to your following. Add 0 Helpless Survivor(s) to the colony.
+Outsider 2			Survivor	Base		Event: Draw the top card of the Survivor deck and add that Survivor to your following. Add 1 Helpless Survivor(s) to the colony.
+Outsider 3			Survivor	Base		Event: Draw the top card of the Survivor deck and add that Survivor to your following. Add 2 Helpless Survivor(s) to the colony.
