@@ -11,7 +11,6 @@ function refreshLog() {
         success: function(result) {
             if (result != "" && result != $('#log').html()) {
                 $("#log").html(result);
-                $("#log").scrollTop($("#log").scrollHeight)
             }
         },
         error: function(error) {
