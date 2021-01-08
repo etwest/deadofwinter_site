@@ -15,15 +15,15 @@
 }
 
 .icon{
-  height:18px;
-  width:18px;
+  height:14px;
+  width:14px;
   display:inline-block;
 }
 
 /*.tooltip*/
 
 * {
-    font-size:20px;
+    font-size:14px;
 }
 h1 {
     font-size:30px;
