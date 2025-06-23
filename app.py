@@ -532,4 +532,5 @@ def get_nums(gamecode_):
 
 
 if __name__ == '__main__':
+	# for local testing
 	app.run(host='0.0.0.0', threaded=False)
