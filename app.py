@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/env python3
 
 from flask import Flask, make_response, jsonify, render_template
 from flask import request as flask_request
@@ -12,7 +12,7 @@ import pickle
 try:
 	redis_db = redis.from_url(os.environ.get("REDIS_URL"))
 except Exception as err:
-	print("ERROR:", err)
+	print("Redis initialize ERROR:", err)
 	sys.exit(1)
 
 app = Flask(__name__)
